@@ -1,0 +1,46 @@
+.row
+	.small-6.columns
+		%h2 Test Admin
+	.small-6.columns.new-button
+		= link_to 'New', '#', class: 'button small radius success', 'data-reveal-id' => 'new_modal'
+
+
+- if @tests.empty?
+	.row
+		.small-6.columns.small-centered
+			.panel.radius
+				%h5 No Tests
+- else
+	%table.large-12.columns
+		%thead
+			%th Name
+			%th Total Participants
+			%th URL
+			%th Created
+			%th Status
+		%tbody
+			- @tests.each do |test|
+				%tr.hover-toggler
+					%td.title-row
+						= link_to test.name, edit_test_path( test.id )
+						.hover-toggled
+							%a{ href: edit_test_path( test.id ) }
+								%i.icon-pencil
+								edit
+
+							%a{ :href => test_path( test.id ), class: 'delete', 'data-method' => 'delete', 'data-confirm' => 'Delete is forever -- Are you sure?' }
+								%i.icon-trash
+								delete
+
+					%td
+						= test.participant_count
+					%td
+						= test.slug
+					%td
+						= time_ago_in_words( test.created_at )
+						ago
+					%td
+						= test.status
+
+
+= render 'new_modal'

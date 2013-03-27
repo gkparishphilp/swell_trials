@@ -1,0 +1,38 @@
+%h2
+	Edit
+	= @test.name
+	Variant:
+	= @variant.name
+
+%ul.breadcrumbs
+	%li
+	%li
+		= link_to 'Test Admin', admin_tests_path
+	%li
+		= link_to @test.name, edit_test_path( @test.id )
+	%li.current
+		= @variant.name
+
+= form_for [ @test, @variant ], html: { class: 'custom' } do |f|
+	.row
+		.large-8.columns
+			= f.label :name, 'Name: '
+			= f.text_field :name
+
+			.control-group
+				= f.label :content, "Content:"
+				= f.text_area :content, class: 'editor-full'
+
+		.large-4.columns
+			.panel.radius
+				= f.label :status, "Status:"
+				= f.select :status, [ ['Active',  'published'], ['Inactive', 'draft'] ]
+
+				= f.label :status, "Weight:"
+				= f.select :weight, [ ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'], ['6', '6'], ['7', '7'], ['8', '8'], ['9', '8'], ['10', '10']  ]
+
+				%hr
+
+				= f.submit 'Update', class: 'button radius'
+				= link_to 'Cancel', admin_tests_path, class: 'button radius tiny secondary float-right'
+

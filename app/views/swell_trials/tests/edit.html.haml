@@ -1,0 +1,95 @@
+%h1
+	Edit
+	= @test.name
+
+
+%ul.breadcrumbs
+	%li
+	%li
+		= link_to 'Admin', admin_tests_path
+	%li.current
+		= link_to @test.name, '#'
+
+= form_for @test, html: { class: 'custom' } do |f|
+	.row
+		.large-8.columns
+			= f.label :name, 'Name: '
+			= f.text_field :name
+
+			= f.label :url
+			.row.collapse
+				.small-2.large-1.columns
+					%span.prefix
+						= '/'
+				.small-10.large-11.columns
+					= f.text_field :url, value: @test.slug, class: 'six'
+
+			.row
+				= f.label :description, "Description:"
+				= f.text_area :description, class: 'editor-simple'
+
+		.large-4.columns
+			.panel.radius
+				= label_tag :custom_drop1, "Status:"
+				= f.select :status, [ ['Active',  'published'], ['Inactive', 'draft'] ], {}, id: 'custom_drop1', class: 'medium' 
+
+				= f.label :conversion_event
+				= f.select :conversion_event, [ ['Optin', 'optin'], ['Registration', 'registration'], ['View', 'view'] ]
+
+				#conversion_path_select
+					= f.label :conversion_path, 'Which Page:'
+					= f.select :conversion_path, @paths, class: 'twelve'
+				
+
+				%hr
+
+				= f.submit 'Update', class: 'button small radius'
+				= link_to 'Cancel', admin_tests_path, class: 'button radius tiny secondary float-right'
+
+.row
+	.large-4.columns
+		%h2 Variants
+	.large-8.columns.new-button
+		= link_to 'New', '#', class: 'button small radius success', 'data-reveal-id' => 'new_modal'
+%table.large-12.columns
+	%thead
+		%th Name
+		%th Viewed By
+		%th 
+			Conversions
+			= "(#{@test.conversion_event.pluralize})"
+		%th Conversion %
+		%th Interval Confidence
+		%th Running Since
+		%th Status
+	%tbody
+		- @test.test_variants.each do |variant|
+			%tr.hover-toggler
+				%td.title-row
+					= link_to variant.name, edit_test_test_variant_path( @test.id, variant )
+					.hover-toggled
+						%a{ href: edit_test_test_variant_path( @test.id, variant ) }
+							%i.icon-pencil
+							edit
+						%a{ href: test_test_variant_path( @test.id, variant) }
+							%i.icon-eye-open
+							view
+				%td
+					= pluralize variant.cached_participant_count, 'person'
+				%td
+					= variant.conversions_for( event: variant.test.conversion_event, path: variant.test.conversion_path )
+				%td
+					= number_to_percentage( variant.conversion_rate_for( event: variant.test.conversion_event, path: variant.test.conversion_path ) * 100, precision: 2 )
+					%small{ style: 'font-size: 85%; color: #999;' }
+						&plusmn;
+						= number_to_percentage( variant.confidence_interval_for( event: variant.test.conversion_event, path: variant.test.conversion_path, confidence: @confidence ) * 100, precision: 2 )
+				%td
+					= number_to_percentage( @confidence, precision: 0 )
+				%td
+					= time_ago_in_words( variant.created_at )
+					ago
+				%td
+					= variant.status
+
+
+= render 'swell_tests/test_variants/new_modal', test: @test

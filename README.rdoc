@@ -1,0 +1,11 @@
+= SwellTrials
+
+Todo: 
+- Tests for fragments rather than entire pages
+
+
+
+3/19
+Added boatrace test-type (always chooses least-shown variant)
+
+in tests_controller#show, look for test with id or slug. If nothing found, redirect to swell_media#show (or inheret the controller and super if no active test)

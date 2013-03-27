@@ -1,0 +1,10 @@
+#new_modal.reveal-modal.large.radius
+	%h2 New Variant
+
+	= form_for [ test, SwellTrials::TestVariant.new ] do |f|
+		= f.label :name, 'Name:'
+		= f.text_field :name, placeholder: 'Name'
+
+		= f.submit 'Create', class: 'button radius'
+
+	= link_to "x", '#', class: 'close-reveal-modal'

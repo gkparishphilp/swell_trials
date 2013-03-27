@@ -1,0 +1,18 @@
+#new_modal.reveal-modal.large.radius
+	%h2 New Test
+
+	= form_for SwellTrials::Test.new do |f|
+		= f.label :name, 'Name:'
+		= f.text_field :name, placeholder: 'Name'
+
+		= f.label :url, 'URL:'
+		.row.collapse
+			.two.mobile-one.columns
+				%span.prefix
+					http://
+			.ten.mobile-three.columns
+				= f.text_field :url, placeholder: 'URL'
+
+		= f.submit 'Create', class: 'button radius'
+
+	= link_to "x", '#', class: 'close-reveal-modal'
