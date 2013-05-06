@@ -38,18 +38,20 @@ module SwellTrials
 				# no valid test if no active variants
 				bail_to_swell_media( id: id ) if @test.active_variants.empty?
 				# find or initialize a trial for the current_user
-				trial = TestTrial.where( test_id: @test.id, guid: cookies[:guid] ).first_or_initialize
+				trial = TestTrial.where( test_id: @test.id, participant_id: cookies[:pid] ).first_or_initialize
+
 				if trial.id.present?
 					@variant = trial.test_variant
-					trial.increment_view_count if trial.updated_at < 1.minute.ago
+					trial.increment_view_count
 				else
 					# pick a variant
 					@variant = @test.choose_variant
-					unless @current_user.is_bot?
-						trial.test_variant_id = @variant.id
-						trial.save
-						@variant.increment_participant_count
-					end
+
+					# TODO - check for bots and don't record
+					trial.test_variant_id = @variant.id
+					trial.save
+					@variant.increment_participant_count
+
 				end
 				record_app_event( :view, on: @variant, rate: 1.hour, content: "viewed #{@variant.name}" )
 			else

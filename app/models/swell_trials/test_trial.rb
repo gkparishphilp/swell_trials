@@ -9,7 +9,7 @@ module SwellTrials
 
 
 		def increment_view_count
-			self.cached_view_count += 1
+			self.cached_view_count += 1 if self.updated_at > 1.minute.ago
 			self.save
 		end
 		

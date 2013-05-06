@@ -42,13 +42,13 @@ class SwellTrialsMigration < ActiveRecord::Migration
 		create_table :test_trials, force: true do |t|
 			t.references 		:test
 			t.references 		:test_variant
-			t.integer			:guid
+			t.integer			:participant_id
 			t.integer			:cached_view_count, 		default: 1
 			t.timestamps
 		end
 
 		add_index :test_trials, :test_variant_id
-		add_index :test_trials, :guid
+		add_index :test_trials, :participant_id
 
 	end
 end
